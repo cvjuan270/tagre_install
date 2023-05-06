@@ -60,27 +60,24 @@ if [ $GENERATE_RANDOM_PASSWORD = "True" ]; then
     echo -e "* Generating random admin password"
     OE_SUPERADMIN=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
 fi
-sudo su root -c "printf 'admin_passwd = ${OE_SUPERADMIN}\n' >> /etc/${OE_CONFIG}.conf"
-sudo su root -c "printf 'http_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
-sudo su root -c "printf 'logfile = /var/log/${OE_USER}/${OE_CONFIG}.log\n' >> /etc/${OE_CONFIG}.conf"
-sudo su root -c "printf 'addons_path=${OE_HOME}/odoo/addons,${OE_HOME}/custom-addons\n' >> /etc/${OE_CONFIG}.conf"
-sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
-sudo chmod 640 /etc/${OE_CONFIG}.conf
+sudo mkdir /etc/${OE_CONFIG}
+sudo su root -c "printf 'admin_passwd = ${OE_SUPERADMIN}\n' >> /etc/${OE_CONFIG}/${OE_CONFIG}.conf"
+sudo su root -c "printf 'http_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}/${OE_CONFIG}.conf"
+sudo su root -c "printf 'logfile = /var/log/${OE_USER}/${OE_CONFIG}.log\n' >> /etc/${OE_CONFIG}/${OE_CONFIG}.conf"
+sudo su root -c "printf 'addons_path=${OE_HOME}/odoo/addons,${OE_HOME}/custom-addons\n' >> /etc/${OE_CONFIG}/${OE_CONFIG}.conf"
+sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}/${OE_CONFIG}.conf
+sudo chmod 640 /etc/${OE_CONFIG}/${OE_CONFIG}.conf
 
 echo -e "\n----- Create service"
-
 sudo su root -c "printf '[Unit]\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf 'Description=Odoo-${OE_USER}\n' >> /etc/systemd/system/${OE_USER}.service"
-sudo su root -c "printf 'Requires=postgresql.service\n' >> /etc/systemd/system/${OE_USER}.service"
-sudo su root -c "printf 'After=network.target postgresql.service\n' >> /etc/systemd/system/${OE_USER}.service"
+sudo su root -c "printf 'After=network.target\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf '[Service]\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf 'Type=simple\n' >> /etc/systemd/system/${OE_USER}.service"
-sudo su root -c "printf 'SyslogIdentifier=${OE_USER}\n' >> /etc/systemd/system/${OE_USER}.service"
-sudo su root -c "printf 'PermissionsStartOnly=true\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf 'User=${OE_USER}\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf 'Group=${OE_USER}\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf 'ExecStart=${OE_HOME}/venv/bin/python3 ${OE_HOME}/odoo/odoo-bin -c /etc/${OE_USER}-server.conf\n' >> /etc/systemd/system/${OE_USER}.service"
-sudo su root -c "printf 'StandardOutput=journal+console\n' >> /etc/systemd/system/${OE_USER}.service"
+sudo su root -c "printf 'SKillMode=mixed\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf '[Install]\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf 'WantedBy=multi-user.target\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo systemctl daemon-reload
