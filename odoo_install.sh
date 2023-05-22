@@ -54,19 +54,19 @@ echo -e "\n---- Setting permissions on home folder ----"
 sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
 
 echo -e "* Create server config file"
-sudo touch /etc/${OE_CONFIG}.conf
-sudo su root -c "printf '[options] \n; This is the password that allows database operations:\n' >> /etc/${OE_CONFIG}.conf"
+sudo mkdir /etc/${OE_USER}
+sudo touch /etc/${OE_USER}/${OE_CONFIG}.conf
+sudo su root -c "printf '[options] \n; This is the password that allows database operations:\n' >> /etc/${OE_USER}/${OE_CONFIG}.conf"
 if [ $GENERATE_RANDOM_PASSWORD = "True" ]; then
     echo -e "* Generating random admin password"
     OE_SUPERADMIN=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
 fi
-sudo mkdir /etc/${OE_CONFIG}
-sudo su root -c "printf 'admin_passwd = ${OE_SUPERADMIN}\n' >> /etc/${OE_CONFIG}/${OE_CONFIG}.conf"
-sudo su root -c "printf 'http_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}/${OE_CONFIG}.conf"
-sudo su root -c "printf 'logfile = /var/log/${OE_USER}/${OE_CONFIG}.log\n' >> /etc/${OE_CONFIG}/${OE_CONFIG}.conf"
-sudo su root -c "printf 'addons_path=${OE_HOME}/odoo/addons,${OE_HOME}/custom-addons\n' >> /etc/${OE_CONFIG}/${OE_CONFIG}.conf"
-sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}/${OE_CONFIG}.conf
-sudo chmod 640 /etc/${OE_CONFIG}/${OE_CONFIG}.conf
+sudo su root -c "printf 'admin_passwd = ${OE_SUPERADMIN}\n' >> /etc/${OE_USER}/${OE_CONFIG}.conf"
+sudo su root -c "printf 'http_port = ${OE_PORT}\n' >> /etc/${OE_USER}/${OE_CONFIG}.conf"
+sudo su root -c "printf 'logfile = /var/log/${OE_USER}/${OE_CONFIG}.log\n' >> /etc/${OE_USER}/${OE_CONFIG}.conf"
+sudo su root -c "printf 'addons_path=${OE_HOME}/odoo/addons,${OE_HOME}/custom-addons\n' >> /etc/${OE_USER}/${OE_CONFIG}.conf"
+sudo chown $OE_USER:$OE_USER /etc/${OE_USER}/${OE_CONFIG}.conf
+sudo chmod 640 /etc/${OE_USER}/${OE_CONFIG}.conf
 
 echo -e "\n----- Create service"
 sudo su root -c "printf '[Unit]\n' >> /etc/systemd/system/${OE_USER}.service"
