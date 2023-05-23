@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OE_PATH="/opt/odoo/16/odoo/custom-addons/"
+OE_PATH="/opt/odoo/custom-addons/"
 OE_VERSION="16.0"
 mkdir $OE_PATH/OCA
 cd $OE_PATH/OCA
@@ -15,4 +15,11 @@ git clone https://github.com/OCA/account-financial-reporting.git --depth=1 --bra
 echo -e "\n ----------------Clone account-financial-reporting"
 git clone https://github.com/OCA/account-financial-tools.git --depth=1 --branch $OE_VERSION
 echo -e "\n ----------------Clone account-financial-tools"
+git clone https://github.com/OCA/server-tools.git --depth=1 --branch $OE_VERSION
+echo -e "\n ----------------Clone server-tools"
+
+git clone https://github.com/OCA/account-analytic --depth=1 --branch $OE_VERSION
+echo -e "\n ----------------Clone account-analytic"
+git clone https://github.com/OCA/server-backend --depth=1 --branch $OE_VERSION
+echo -e "\n ----------------Clone server-backend"
 
