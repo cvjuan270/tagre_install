@@ -22,4 +22,6 @@ git clone https://github.com/OCA/account-analytic --depth=1 --branch $OE_VERSION
 echo -e "\n ----------------Clone account-analytic"
 git clone https://github.com/OCA/server-backend --depth=1 --branch $OE_VERSION
 echo -e "\n ----------------Clone server-backend"
+git clone https://github.com/OCA/web --depth=1 --branch $OE_VERSION
+echo -e "\n ----------------Clone web"
 
