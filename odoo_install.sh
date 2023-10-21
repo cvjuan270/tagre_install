@@ -1,12 +1,12 @@
 #!/bin/bash
 
-OE_USER="dvintegrales"
+OE_USER="gexin"
 # Example "Juan Collado, 993433774, "
 OE_GECOS = "ODOO"
 OE_HOME="/opt/$OE_USER"
 OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 INSTALL_WKHTMLTOPDF="False"
-OE_PORT="8077"
+OE_PORT="8088"
 OE_VERSION="16.0"
 INSTALL_NGINX="False"
 OE_SUPERADMIN="admin"
