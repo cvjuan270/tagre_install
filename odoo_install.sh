@@ -1,13 +1,13 @@
 #!/bin/bash
 
-OE_USER="gexin"
+OE_USER="roma_hoteles"
 # Example "Juan Collado, 993433774, "
 OE_GECOS = "ODOO"
 OE_HOME="/opt/$OE_USER"
 OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 INSTALL_WKHTMLTOPDF="False"
-OE_PORT="8088"
-OE_VERSION="16.0"
+OE_PORT="8100"
+OE_VERSION="17.0"
 INSTALL_NGINX="False"
 OE_SUPERADMIN="admin"
 # Set to "True" to generate a random password, "False" to use the variable in OE_SUPERADMIN
@@ -23,7 +23,7 @@ sudo apt update
 # Install postgresQL
 # -------------------------------------------
 echo -e "\n---- Install postgresQL"
-sudo apt install postgresql -y
+# sudo apt install postgresql -y
 echo -e "\n---- Create the ODOO PostgresQl User"
 sudo su - postgres -c "createuser -s $OE_USER" 2 >/dev/null || true
 # ----------------------------------------------------------------
@@ -34,9 +34,6 @@ sudo apt install python3-pip wget python3-dev python3-venv python3-wheel libxml2
 echo -e "\n---- Crate ODOO system user"
 sudo adduser --system --quiet --shell=/bin/bash --home=$OE_HOME --gecos 'ODOO' --group $OE_USER
 sudo adduser $OE_USER sudo
-echo -e "\n----Create log directory"
-sudo mkdir -p /var/log/$OE_USER
-sudo chown $OE_USER:$OE_USER /var/log/$OE_USER
 #sudo su $OE_USER
 cd $OE_HOME
 echo -e "\n----Dowload odoo"
@@ -51,22 +48,22 @@ deactivate
 echo "\n Create custom module directory"
 sudo su $OE_USER -c "mkdir $OE_HOME/custom-addons"
 echo -e "\n---- Setting permissions on home folder ----"
+
 sudo chown -R $OE_USER:$OE_USER $OE_HOME/*
 
 echo -e "* Create server config file"
-sudo mkdir /etc/${OE_USER}
-sudo touch /etc/${OE_USER}/${OE_CONFIG}.conf
-sudo su root -c "printf '[options] \n; This is the password that allows database operations:\n' >> /etc/${OE_USER}/${OE_CONFIG}.conf"
+sudo touch /etc/${OE_CONFIG}.conf
+sudo su root -c "printf '[options] \n; This is the password that allows database operations:\n' >> /etc/${OE_CONFIG}.conf"
 if [ $GENERATE_RANDOM_PASSWORD = "True" ]; then
     echo -e "* Generating random admin password"
     OE_SUPERADMIN=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 16 | head -n 1)
 fi
-sudo su root -c "printf 'admin_passwd = ${OE_SUPERADMIN}\n' >> /etc/${OE_USER}/${OE_CONFIG}.conf"
-sudo su root -c "printf 'http_port = ${OE_PORT}\n' >> /etc/${OE_USER}/${OE_CONFIG}.conf"
-sudo su root -c "printf 'logfile = /var/log/${OE_USER}/${OE_CONFIG}.log\n' >> /etc/${OE_USER}/${OE_CONFIG}.conf"
-sudo su root -c "printf 'addons_path=${OE_HOME}/odoo/addons,${OE_HOME}/custom-addons\n' >> /etc/${OE_USER}/${OE_CONFIG}.conf"
-sudo chown $OE_USER:$OE_USER /etc/${OE_USER}/${OE_CONFIG}.conf
-sudo chmod 640 /etc/${OE_USER}/${OE_CONFIG}.conf
+sudo su root -c "printf 'admin_passwd = ${OE_SUPERADMIN}\n' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "printf 'http_port = ${OE_PORT}\n' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "printf 'logfile = /var/log/${OE_CONFIG}.log\n' >> /etc/${OE_CONFIG}.conf"
+sudo su root -c "printf 'addons_path=${OE_HOME}/odoo/addons,${OE_HOME}/custom-addons\n' >> /etc/${OE_CONFIG}.conf"
+sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
+sudo chmod 640 /etc/${OE_CONFIG}.conf
 
 echo -e "\n----- Create service"
 sudo su root -c "printf '[Unit]\n' >> /etc/systemd/system/${OE_USER}.service"
@@ -76,7 +73,7 @@ sudo su root -c "printf '[Service]\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf 'Type=simple\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf 'User=${OE_USER}\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf 'Group=${OE_USER}\n' >> /etc/systemd/system/${OE_USER}.service"
-sudo su root -c "printf 'ExecStart=${OE_HOME}/venv/bin/python3 ${OE_HOME}/odoo/odoo-bin -c /etc/${OE_USER}/${OE_USER}-server.conf\n' >> /etc/systemd/system/${OE_USER}.service"
+sudo su root -c "printf 'ExecStart=${OE_HOME}/venv/bin/python3 ${OE_HOME}/odoo/odoo-bin -c /etc/${OE_USER}-server.conf\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf 'SKillMode=mixed\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf '[Install]\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf 'WantedBy=multi-user.target\n' >> /etc/systemd/system/${OE_USER}.service"
