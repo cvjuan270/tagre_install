@@ -66,7 +66,7 @@ sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
 sudo chmod 640 /etc/${OE_CONFIG}.conf
 
 echo -e "Create log file"
-sudo touch /val/log/${OE_CONFIG}.log
+sudo touch /var/log/${OE_CONFIG}.log
 sudo chmod 640 /var/log/${OE_CONFIG}.log
 
 echo -e "\n----- Create service"
