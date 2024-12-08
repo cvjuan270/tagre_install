@@ -65,6 +65,10 @@ sudo su root -c "printf 'addons_path=${OE_HOME}/odoo/addons,${OE_HOME}/custom-ad
 sudo chown $OE_USER:$OE_USER /etc/${OE_CONFIG}.conf
 sudo chmod 640 /etc/${OE_CONFIG}.conf
 
+echo -e "Create log file"
+sudo touch /val/log/${OE_CONFIG}.log
+sudo chmod 640 /var/log/${OE_CONFIG}.log
+
 echo -e "\n----- Create service"
 sudo su root -c "printf '[Unit]\n' >> /etc/systemd/system/${OE_USER}.service"
 sudo su root -c "printf 'Description=Odoo-${OE_USER}\n' >> /etc/systemd/system/${OE_USER}.service"
