@@ -1,12 +1,12 @@
 #!/bin/bash
 
-OE_USER="liz17"
+OE_USER="ctusalud"
 # Example "Juan Collado, 993433774, "
 OE_GECOS = "ODOO"
 OE_HOME="/opt/$OE_USER"
 OE_HOME_EXT="/$OE_USER/${OE_USER}-server"
 INSTALL_WKHTMLTOPDF="False"
-OE_PORT="17006" # los puertos avanzan de 2
+OE_PORT="17008" # los puertos avanzan de 2
 OE_VERSION="17.0"
 INSTALL_NGINX="False"
 OE_SUPERADMIN="admin"

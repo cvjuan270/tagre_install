@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Variables
-DOMINIO="liz.tagre.pe"
-PUERTO="17006"
+DOMINIO="ctusalud.tagre.pe"
+PUERTO="17008"
 CONFIG_PATH="/etc/nginx/conf.d/${DOMINIO}.conf"
 
 # Crear archivo de configuración
